@@ -3,23 +3,20 @@
 #include <string>
 using namespace std;
 
-//employee data
-
+// Employee data
 struct Employee {
 	int ID;
 	string name;
 	double salary;
 	Employee() {}
-	Employee(int id, string name, double salary)
-	{
+	Employee(int id, string name, double salary) {
 		this->ID = id;
 		this->name = name;
 		this->salary = salary;
 	}
 };
 
-// Node Build For the linked list
-
+// Node for the linked list
 struct Node {
 	Employee data;
 	Node* prev;
@@ -31,7 +28,6 @@ struct Node {
 		this->next = nullptr;
 	}
 };
-
 
 class EmployeeList {
 	Node* head;
@@ -47,15 +43,13 @@ public:
 		Employee emp(id, name, salary);
 		Node* new_node = new Node(emp);
 
-		if (!head)
-		{
+		if (!head) {
 			head = tail = new_node;
 		}
 		else {
 			tail->next = new_node;
 			new_node->prev = tail;
 			tail = new_node;
-
 		}
 	}
 
@@ -89,34 +83,81 @@ public:
 		while (current) {
 			if (current->data.ID == id) {
 				return current;
-				current = current->next;
 			}
-			return nullptr;
+			current = current->next;
 		}
+		return nullptr;
 	}
 
-	void replaceEmployee(int id, string newname, double newsalary)
-	{
+	void replaceEmployee(int id, string newname, double newsalary) {
 		Node* node = findEmployee(id);
 		if (node) {
 			node->data.name = newname;
 			node->data.salary = newsalary;
-			cout << "Employee with ID : " << id << "replaced with another" << endl;
+			cout << "Employee with ID " << id << " replaced.\n";
 		}
-		else
-		{
-			cout << "Id : " << id << "not found" << endl;
+		else {
+			cout << "Employee with ID " << id << " not found.\n";
 		}
 	}
 
 	void display() {
 		Node* current = head;
 		while (current) {
-			cout << "ID : " << current->data.ID << ", Name: " << current->data.name << ", Salary: "
+			cout << "ID: " << current->data.ID << ", Name: " << current->data.name << ", Salary: "
 				<< current->data.salary << endl;
 			current = current->next;
-
 		}
+	}
+
+	
+	Node* getMiddle(Node* head) {
+		if (!head) return head;
+		Node* slow = head;
+		Node* fast = head;
+		while (fast->next && fast->next->next) {
+			slow = slow->next;
+			fast = fast->next->next;
+		}
+		return slow;
+	}
+
+	Node* sortedMerge(Node* left, Node* right) {
+		if (!left) return right;
+		if (!right) return left;
+
+		if (left->data.ID <= right->data.ID) {
+			left->next = sortedMerge(left->next, right);
+			left->next->prev = left;
+			left->prev = nullptr;
+			return left;
+		}
+		else {
+			right->next = sortedMerge(left, right->next);
+			right->next->prev = right;
+			right->prev = nullptr;
+			return right;
+		}
+	}
+
+	Node* mergeSort(Node* node) {
+		if (!node || !node->next) return node;
+
+		Node* middle = getMiddle(node);
+		Node* nextToMiddle = middle->next;
+		middle->next = nullptr;
+
+		Node* left = mergeSort(node);
+		Node* right = mergeSort(nextToMiddle);
+
+		return sortedMerge(left, right);
+	}
+
+	void sortEmployeesByID() {
+		head = mergeSort(head);
+		Node* temp = head;
+		while (temp && temp->next) temp = temp->next;
+		tail = temp;
 	}
 
 	~EmployeeList() {
@@ -129,27 +170,37 @@ public:
 	}
 };
 
-
-
-
-int main()
-{
+int main() {
 	EmployeeList list;
 
-	list.addEmployee(1, "mohamed", 50000);
-	list.addEmployee(57, "khaled", 7000);
-	list.addEmployee(88, "hussin", 8800);
-	cout << "All Employee : " << endl;
+	list.addEmployee(1, "Mohamed", 50000);
+	list.addEmployee(88, "Khaled", 7000);
+	list.addEmployee(57, "Hussin", 8800);
+
+
+	//-----display--------
+	cout << "All Employees:\n";
 	list.display();
-	list.deleteEmployee(57);
+	cout << endl;
+	//------mergeSort------
+	cout << "\nSorting employees by ID:\n";
+	list.sortEmployeesByID();
 	list.display();
-	Node* found = list.findEmployee(1);
+	cout << endl;
+	//------delete---------
+	list.deleteEmployee(88);
+	list.display();
+	cout << endl;
+	//------replace--------
+	list.replaceEmployee(57, "Kassem", 10000);
+	list.display();
+	cout << endl;
+	//------add------------
+	list.addEmployee(99, "Ronaldo", 900000);
+	list.display();
+	cout << endl;
+	//-------find---------
+	Node* found = list.findEmployee(99);
 	if (found)
 		cout << "Found Employee with ID 2: " << found->data.name << "\n";
-	list.replaceEmployee(1, "kassem", 9000);
-	cout << "after : ";
-	list.display();
-
 }
-
-
