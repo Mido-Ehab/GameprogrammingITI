@@ -18,5 +18,13 @@
     <ClCompile Include="OOP&amp;DSLab5.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="ComplexNo.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="ComplexNo.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
