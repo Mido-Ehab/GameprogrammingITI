@@ -1,5 +1,9 @@
 #include <iostream>
+#include <vector>
 using namespace std;
+
+
+
 
 
 class geoShape 
@@ -8,8 +12,9 @@ class geoShape
 public:
 
 
-    virtual void area() {
+    virtual double area() {
         cout << "Calc. area of nothing !!" << endl;
+        return 0;
     }
 };
 
@@ -25,10 +30,10 @@ public:
         this->r = r;
     }
 
-    void area() override{
+    double area() override{
         double aC;
         aC = r * r * 3.14;
-        cout << "the area of the circle : " << aC << endl;
+        return aC;
     }
 };
 
@@ -47,10 +52,10 @@ public:
     }
 
    
-    void area() {
+    double area() {
         double aT;
         aT= ( l*h)/2;
-        cout << "the area of the triangle : " << aT << endl;
+        return aT;
     }
 };
 
@@ -67,10 +72,10 @@ public:
         this->h = h;
     }
     
-    void area()  {
-        int aR;
+    double area()  {
+        double aR;
         aR = l * h;
-        cout << "the area of the rectangle : " << aR << endl;
+        return aR;
     }
 };
 
@@ -87,58 +92,173 @@ public:
     }
 
   
-    void area() override  {
+    double area() override  {
         int aS;
         aS = l * l;
-        cout << "the area of the square : " << aS << endl;
+        return aS;
     }
 };
 
 
-class Character 
-{
-public:
-    virtual void Attack() {
-        cout << "char is attacking " << endl;
-    }
-};
-
-class player:public Character
-{
-public:
-    void Attack() override{
-        cout << "player is attacking " << endl;
-    }
-};
-
-class NPC: public Character
-    {
-    public:
-        void Attack() override {
-            cout << "NPC is attacking " << endl;
-        }
-    }; 
-
-class Boss :public NPC 
-{
-public:
-    void Attack() override
-    {
-        cout << "Boss is attacking" << endl;
-    }
-};
-
-void Attack(Character *character)
-{
-    character->Attack();
-}
-
-void area(geoShape* geo) {
-    geo->area();
-
+double area(geoShape* geo) {
+   
+    return geo->area();
 }
 
 
+//vector of pointer type geoshape to access the area function that uses the pointer of the same type
+
+double avgArea (vector <geoShape*> shapes)
+{
+    double avSum=0;
+    int Length=0;
+
+    for (geoShape* g : shapes)
+    {
+    
+        avSum += area(g);
+      /*  Length++;*/
+    }
+
+    return (avSum / shapes.size());
+   
+}
+
+
+int main()
+{
+    Circle c(5);
+    Triangle t(6, 5);
+    Rectangle r(9, 5);
+    Square s(8);
+
+    vector <geoShape*> shapes;
+
+    shapes.push_back(&c);
+    shapes.push_back(&t);
+    shapes.push_back(&r);
+    shapes.push_back(&s);
+
+    avgArea(shapes);
+
+    cout << "Avg = " << avgArea(shapes);
+
+
+    /*Square sq(5);
+    Circle c(6);
+    Triangle T(5,8);
+    Rectangle re(5,9);
+
+    area(&sq);
+    area(&re);
+    area(&c);
+    area(&T);*/
+    
+
+    //Character characterOne;
+    //player playerOne;
+    //NPC Cop;
+    //Boss b1;
+    //Attack(&b1);//called the copy constructor
+
+}
+
+
+//class Creature 
+//{
+//public:
+//    int ExistanceSince;
+//    void DoCreatureThings()
+//    {
+//        cout << " do creature things "<<endl;
+//    }
+//};
+//
+////
+//class FlyingBirds:virtual public Creature
+//{
+//public:
+//    float wingLength;
+//};
+//
+//class WalkingBirds : virtual public Creature
+//{
+//public:
+//    float walkSpeed;
+//
+//};
+//
+//class Duck :public WalkingBirds, public FlyingBirds
+//{
+//   void DoCreatureThings() 
+//    {
+//
+//    }
+//};
+//
+//class Employee
+//{
+//public:
+//    void doWork() {
+//
+//    }
+//};
+//
+//class Manager : Employee
+//{
+//    vector <Employee> employees;
+//    void InstructEmployees() 
+//    {
+//
+//        for (Employee emp : employees)
+//        {
+//            emp.doWork();
+//        }
+//    }
+//};
+//
+//
+//class Character 
+//{
+//public:
+//    virtual void Attack() {
+//        cout << "char is attacking " << endl;
+//    }
+//};
+//
+//class player:public Character
+//{
+//public:
+//    void Attack() override{
+//        cout << "player is attacking " << endl;
+//    }
+//};
+//
+//class NPC: public Character
+//    {
+//    public:
+//        void Attack() override {
+//            cout << "NPC is attacking " << endl;
+//        }
+//    }; 
+//
+//class Boss :public NPC 
+//{
+//public:
+//    void Attack() override
+//    {
+//        cout << "Boss is attacking" << endl;
+//    }
+//};
+//
+//void Attack(Character *character)
+//{
+//    character->Attack();
+//}
+//void DoCreatureThing(Creature& creature)
+//{
+//    creature.DoCreatureThings();
+//}
 //class object{};
 //
 //class base : object 
@@ -171,24 +291,3 @@ void area(geoShape* geo) {
 //{
 //    
 //};
-
-int main()
-{
-    Square sq(5);
-    Circle c(6);
-    Triangle T(5,8);
-    Rectangle re(5,9);
-
-    area(&sq);
-    area(&re);
-    area(&c);
-    area(&T);
-    
-
-    //Character characterOne;
-    //player playerOne;
-    //NPC Cop;
-    //Boss b1;
-    //Attack(&b1);//called the copy constructor
-
-}
